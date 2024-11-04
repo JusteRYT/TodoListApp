@@ -19,6 +19,13 @@
         <input type="text" id="search-input" placeholder="Поиск задач">
         <ul id="search-results"></ul>
     </div>
+    <div class="date-range">
+        <label for="start-date">С:</label>
+        <input type="text" id="start-date" placeholder="Начальная дата">
+        <label for="end-date">По:</label>
+        <input type="text" id="end-date" placeholder="Конечная дата">
+        <button id="filter-date-btn">Фильтровать</button>
+    </div>
 </header>
 
 <section class="task-list">
@@ -35,6 +42,11 @@
         <!-- Динамическое заполнение задач через JavaScript -->
         </tbody>
     </table>
+    <div class="pagination">
+        <button id="prev-page">Предыдущая</button>
+        <span id="page-info">Страница 1</span>
+        <button id="next-page">Следующая</button>
+    </div>
 </section>
 
 <!-- Модальное окно для полного описания задачи -->
