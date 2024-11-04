@@ -17,26 +17,32 @@ public class TodoService {
     private final TodoRepository todoRepository;
 
     @Autowired
-    public TodoService(TodoRepository todoRepository){
+    public TodoService(TodoRepository todoRepository) {
         this.todoRepository = todoRepository;
     }
 
     /**
      * Получить все задачи.
+     *
      * @return список задач.
      */
-    public List<TodoEntity> getAllTodos(){
+    public List<TodoEntity> getAllTodos() {
         return todoRepository.findAll();
     }
 
     /**
      * Фильтрация задач по диапазону дат и статусу.
-     * @param from начальная дата.
-     * @param to конечная дата.
+     *
+     * @param from   начальная дата.
+     * @param to     конечная дата.
      * @param status статус задачи.
      * @return список задач, соответствующих критериям.
      */
-    public List<TodoEntity> getTodosByDateAndStatus(LocalDateTime from, LocalDateTime to, Boolean status){
+    public List<TodoEntity> getTodosByDateAndStatus(LocalDateTime from, LocalDateTime to, Boolean status) {
         return todoRepository.findAllByDateBetweenAndStatus(from, to, status);
+    }
+
+    public List<TodoEntity> searchTodosByName(String namePart) {
+        return todoRepository.findByNameContainingIgnoreCase(namePart);
     }
 }
