@@ -42,4 +42,9 @@ public class TodoController {
             @RequestParam Boolean status) {
         return todoService.getTodosByDateAndStatus(from, to, status);
     }
+
+    @GetMapping("/find")
+    public List<TodoEntity> searchTodosByName(@RequestParam String q){
+        return todoService.searchTodosByName(q);
+    }
 }
