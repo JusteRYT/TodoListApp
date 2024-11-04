@@ -11,11 +11,11 @@ import java.util.List;
  * Сервис для обработки бизнес-логики, включая фильтрацию и поиск задач.
  */
 @Service
-public class ToDoService {
+public class TodoService {
     private final TodoRepository todoRepository;
 
     @Autowired
-    public ToDoService(TodoRepository todoRepository){
+    public TodoService(TodoRepository todoRepository){
         this.todoRepository = todoRepository;
     }
 
