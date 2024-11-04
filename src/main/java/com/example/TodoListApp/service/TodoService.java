@@ -16,6 +16,11 @@ import java.util.List;
 public class TodoService {
     private final TodoRepository todoRepository;
 
+    /**
+     * Конструктор для инъекции зависимости `TodoRepository`.
+     *
+     * @param todoRepository репозиторий для взаимодействия с базой данных задач.
+     */
     @Autowired
     public TodoService(TodoRepository todoRepository) {
         this.todoRepository = todoRepository;
@@ -42,6 +47,12 @@ public class TodoService {
         return todoRepository.findAllByDateBetweenAndStatus(from, to, status);
     }
 
+    /**
+     * Поиск задач по названию.
+     *
+     * @param namePart строка поиска, подстрока, которую нужно найти в названии задачи.
+     * @return список задач, название которых содержит заданную подстроку (без учета регистра).
+     */
     public List<TodoEntity> searchTodosByName(String namePart) {
         return todoRepository.findByNameContainingIgnoreCase(namePart);
     }
