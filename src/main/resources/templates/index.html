@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List Application</title>
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+</head>
+<body>
+<header>
+    <h1>Todo List</h1>
+    <div class="filters">
+        <button id="today-btn">Сегодня</button>
+        <button id="week-btn">Эта неделя</button>
+        <button id="pending-btn">Невыполненные задачи</button>
+    </div>
+    <div class="search">
+        <input type="text" id="search-input" placeholder="Поиск задач">
+        <ul id="search-results"></ul>
+    </div>
+</header>
+
+<section class="task-list">
+    <table>
+        <thead>
+        <tr>
+            <th>Название</th>
+            <th>Описание</th>
+            <th>Дата</th>
+            <th>Статус</th>
+        </tr>
+        </thead>
+        <tbody id="tasks-tbody">
+        <!-- Динамическое заполнение задач через JavaScript -->
+        </tbody>
+    </table>
+</section>
+
+<!-- Модальное окно для полного описания задачи -->
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="modal-title"></h2>
+        <p id="modal-full-desc"></p>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

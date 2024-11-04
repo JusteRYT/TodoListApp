@@ -17,24 +17,20 @@ import java.time.LocalDateTime;
  * - `date` — дата и время, связанные с задачей.
  * - `status` — статус выполнения задачи (`true` — выполнена, `false` — не выполнена).
  */
+@Setter
+@Getter
 @Entity
 @Table(name = "todos")
 public class TodoEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter @Setter
     private int id;
 
-    @Getter @Setter
     private String name;
-    @Getter @Setter
     private String shortDescription;
-    @Getter @Setter
     private String fullDescription;
-    @Getter @Setter
     private LocalDateTime date;
-    @Getter @Setter
     private Boolean status;
 
 
