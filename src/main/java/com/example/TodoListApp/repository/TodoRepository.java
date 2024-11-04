@@ -14,4 +14,5 @@ import java.util.List;
 @Repository
 public interface TodoRepository extends JpaRepository<TodoEntity, Long> {
     List<TodoEntity> findAllByDateBetweenAndStatus(LocalDateTime from, LocalDateTime to, Boolean status);
+    List<TodoEntity> findByNameContainingIgnoreCase(String namePart);
 }
