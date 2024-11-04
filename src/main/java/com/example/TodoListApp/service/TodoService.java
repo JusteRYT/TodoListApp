@@ -5,6 +5,8 @@ import com.example.TodoListApp.repository.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -25,5 +27,16 @@ public class TodoService {
      */
     public List<TodoEntity> getAllTodos(){
         return todoRepository.findAll();
+    }
+
+    /**
+     * Фильтрация задач по диапазону дат и статусу.
+     * @param from начальная дата.
+     * @param to конечная дата.
+     * @param status статус задачи.
+     * @return список задач, соответствующих критериям.
+     */
+    public List<TodoEntity> getTodosByDateAndStatus(LocalDateTime from, LocalDateTime to, Boolean status){
+        return todoRepository.findAllByDateBetweenAndStatus(from, to, status);
     }
 }
