@@ -1,12 +1,19 @@
 $(document).ready(function () {
+    let currentPage = 1;
+    const limit = 10; // Количество задач на странице
 
-    // Получение и отображение всех задач
-    function loadTasks() {
+    // Получение и отображение всех задач с пагинацией
+    function loadTasks(page = 1) {
         $.ajax({
             url: "/api/todos",
             method: "GET",
+            data: {
+                limit: limit,
+                offset: (page - 1) * limit
+            },
             success: function (data) {
-                displayTasks(data);
+                displayTasks(data.tasks);
+                updatePagination(data.totalCount, page);
             }
         });
     }
@@ -28,71 +35,40 @@ $(document).ready(function () {
         });
     }
 
-    // Поиск задач по названию
-    $("#search-input").on("input", function () {
-        const query = $(this).val();
-        if (query) {
-            $.ajax({
-                url: `/api/todos/find`,
-                method: "GET",
-                data: { q: query },
-                success: function (data) {
-                    $("#search-results").empty();
-                    data.forEach(task => {
-                        $("#search-results").append(`<li data-id="${task.id}">${task.name}</li>`);
-                    });
-                }
-            });
-        } else {
-            $("#search-results").empty();
+    // Обновление информации о пагинации
+    function updatePagination(totalCount, page) {
+        const totalPages = Math.ceil(totalCount / limit);
+        $("#page-info").text(`Страница ${page} из ${totalPages}`);
+        $("#prev-page").prop("disabled", page === 1);
+        $("#next-page").prop("disabled", page === totalPages);
+    }
+
+    // Фильтрация задач по диапазону дат
+    $("#filter-date-btn").click(function () {
+        const from = $("#start-date").val();
+        const to = $("#end-date").val();
+        $.ajax({
+            url: "/api/todos/date",
+            method: "GET",
+            data: { from: from, to: to, status: true },
+            success: function (data) {
+                displayTasks(data);
+            }
+        });
+    });
+
+    // Обработка кнопки "Предыдущая" для пагинации
+    $("#prev-page").click(function () {
+        if (currentPage > 1) {
+            currentPage--;
+            loadTasks(currentPage);
         }
     });
 
-    // Фильтрация задач по дате (сегодняшний день)
-    $("#today-btn").click(function () {
-        const today = new Date().toISOString().split("T")[0];
-        $.ajax({
-            url: "/api/todos/date",
-            method: "GET",
-            data: { from: today, to: today, status: true },
-            success: function (data) {
-                displayTasks(data);
-            }
-        });
-    });
-
-    // Фильтрация задач по текущей неделе
-    $("#week-btn").click(function () {
-        const today = new Date();
-        const firstDayOfWeek = new Date(today.setDate(today.getDate() - today.getDay())).toISOString().split("T")[0];
-        const lastDayOfWeek = new Date(today.setDate(today.getDate() - today.getDay() + 6)).toISOString().split("T")[0];
-        $.ajax({
-            url: "/api/todos/date",
-            method: "GET",
-            data: { from: firstDayOfWeek, to: lastDayOfWeek, status: true },
-            success: function (data) {
-                displayTasks(data);
-            }
-        });
-    });
-
-    // Открытие полного описания задачи в модальном окне
-    $("#tasks-tbody").on("click", "tr", function () {
-        const taskId = $(this).data("id");
-        $.ajax({
-            url: `/api/todos/${taskId}`,
-            method: "GET",
-            success: function (task) {
-                $("#modal-title").text(task.name);
-                $("#modal-full-desc").text(task.fullDescription);
-                $("#modal").show();
-            }
-        });
-    });
-
-    // Закрытие модального окна
-    $(".close").click(function () {
-        $("#modal").hide();
+    // Обработка кнопки "Следующая" для пагинации
+    $("#next-page").click(function () {
+        currentPage++;
+        loadTasks(currentPage);
     });
 
     // Инициализация загрузки задач при запуске страницы
