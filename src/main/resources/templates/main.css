@@ -65,3 +65,30 @@ th {
     font-size: 24px;
     cursor: pointer;
 }
+
+/* Добавленные стили для элементов выбора диапазона дат и пагинации */
+.date-range {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 10px;
+}
+
+.date-range input {
+    width: 150px;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    gap: 10px;
+}
+
+.pagination button {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
