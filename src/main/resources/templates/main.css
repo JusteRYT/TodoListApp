@@ -1,94 +1,341 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 body {
     font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
+    background-color: #f0f4f8;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px; /* Ширина контейнера */
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
     color: #333;
 }
 
-header {
-    text-align: center;
-    padding: 20px;
-    background-color: #007bff;
-    color: white;
-}
-
-.filters, .search {
-    margin: 10px;
+.search-section {
     display: flex;
-    justify-content: center;
-    gap: 10px;
+    justify-content: flex-end; /* Центрируем поиск вправо */
+    margin-bottom: 20px;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
+.search-input {
+    width: 63%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    transition: border-color 0.3s;
 }
 
-table, th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
-}
-
-th {
-    background-color: #007bff;
+.search-button {
+    padding: 10px;
+    margin-left: 10px;
+    border: none;
+    border-radius: 8px;
+    background-color: #66b3ff;
     color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
-.modal {
+.search-button:hover {
+    background-color: #5591e6;
+}
+
+.main-content {
+    display: flex;
+    margin-top: 20px;
+}
+
+.calendar-container {
+    display: flex;
+    flex-direction: column;
+    margin-right: 20px; /* Отступ между календарем и задачами */
+    border: 1px solid #ddd; /* Граница вокруг календаря */
+    padding: 15px; /* Внутренний отступ */
+    border-radius: 10px; /* Закругленные углы */
+    background-color: #f9f9f9; /* Цвет фона для календаря */
+}
+
+.calendar-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Выровнено по левому краю */
+    margin-bottom: 10px; /* Отступ снизу */
+}
+
+.rounded-button {
+    padding: 15px;
+    margin: 5px 0;
+    border: none;
+    border-radius: 15px;
+    background: linear-gradient(135deg, #ff7e5f, #feb47b);
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.rounded-button:hover {
+    opacity: 0.9;
+}
+
+.calendar-section {
+    margin: 10px 0 0 10px; /* Отступ между календарем и кнопками */
+}
+
+#calendar {
+    margin: 0 auto;
+    padding: 10px;
+    border-radius: 8px;
+    width: 100%; /* Задаем ширину календаря 100% */
+}
+
+/* Убираем синие границы вокруг дат */
+.ui-datepicker td {
+    border: none; /* Убираем границы ячеек */
+}
+
+.show-incomplete-label {
+    margin-top: 10px; /* Отступ сверху */
+}
+
+.tasks-container {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ddd; /* Граница вокруг контейнера задач */
+    padding: 15px; /* Внутренний отступ */
+    border-radius: 10px; /* Закругленные углы */
+    background-color: #f9f9f9; /* Цвет фона для задач */
+    flex-grow: 1; /* Задачи занимают оставшееся пространство */
+    max-width: 100%; /* Убедимся, что контейнер задач не превышает родительский */
+}
+
+.sort-section {
+    display: flex;
+    justify-content: flex-end; /* Выровнено по левому краю */
+    text-align-last: auto;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.sort-button {
+    padding: 8px; /* Убираем лишние отступы */
+    background-color: #dddddd;
+    border: #007bff; /* Убираем рамку */
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.sort-icon {
+    width: 15px; /* Размер иконки уменьшен */
+    height: auto;
+    margin-right: 5px; /* Отступ между иконкой и текстом */
+}
+
+.dropdown-content {
     display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.sort-option {
+    display: flex; /* Используем flex для иконки и текста */
+    align-items: center; /* Центрируем по вертикали */
+    color: black;
+    padding: 8px 16px; /* Уменьшено пространство вокруг пунктов */
+    text-decoration: none;
+    font-size: 14px; /* Уменьшено */
+}
+
+.sort-option:hover {
+    background-color: #f1f1f1;
+}
+
+.task-list {
+    margin: 5px 0;
+}
+
+.task {
+    display: flex;
+    justify-content: space-between; /* Размещаем элементы по краям */
+    align-items: center;
+    padding: 10px;
+    margin: 10px 0; /* Отступ между задачами */
+    border: 1px solid #ddd; /* Граница вокруг задач */
+    border-radius: 8px; /* Закругленные углы */
+    background-color: #fff; /* Цвет фона для задач */
+    overflow: hidden; /* Убираем переполнение */
+}
+
+.task-info {
+    flex-grow: 1; /* Задача занимает все доступное пространство */
+    display: flex; /* Для вертикального размещения элементов */
+    flex-direction: column; /* Размещаем элементы вертикально */
+}
+
+.task-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+.task-desc {
+    font-size: 14px;
+    color: #666;
+}
+
+.status-area {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* Выровнено по правому краю */
+}
+
+.status-checkbox {
+    cursor: pointer;
+}
+
+.creation-date {
+    font-size: 12px;
+    color: #999;
+}
+
+.ui-datepicker {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.ui-datepicker .highlighted {
+    background-color: #007bff; /* Синий фон для выделенных дат */
+    color: white; /* Белый текст для выделенных дат */
+}
+
+/* Убираем границы ячеек */
+.ui-datepicker td {
+    border: none;
+}
+
+/* Стиль для модального окна */
+.modal {
+    display: none; /* Скрыто по умолчанию */
     position: fixed;
-    top: 0;
+    z-index: 1;
     left: 0;
+    top: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    align-items: center;
-    justify-content: center;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 .modal-content {
-    background-color: #fff;
+    background-color: #ffffff;
+    margin: 10% auto;
     padding: 20px;
+    border-radius: 10px;
+    max-width: 500px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.task-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.task-meta span {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #ddd;
+    margin: 10px 0;
+}
+
+.modal-description {
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 10px;
+    background-color: #f9f9f9;
     border-radius: 5px;
-    width: 50%;
+    margin-bottom: 20px;
 }
 
-.close {
-    float: right;
-    font-size: 24px;
-    cursor: pointer;
+.modal-description p {
+    margin: 0;
+    font-size: 14px;
+    color: #333;
 }
 
-/* Добавленные стили для элементов выбора диапазона дат и пагинации */
-.date-range {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin: 10px;
-}
-
-.date-range input {
-    width: 150px;
-}
-
-.pagination {
-    display: flex;
-    justify-content: center;
-    margin: 20px 0;
-    gap: 10px;
-}
-
-.pagination button {
-    padding: 5px 10px;
-    background-color: #007bff;
+.close-button {
+    padding: 10px 20px;
+    background-color: #66b3ff;
     color: white;
     border: none;
+    border-radius: 8px;
     cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+    text-align: center;
 }
+
+.close-button:hover {
+    background-color: #5591e6;
+}
+.custom-checkbox {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+}
+
+.custom-checkbox input[type="checkbox"] {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background-color: #f0f0f0;
+    border: 2px solid #66b3ff;
+    border-radius: 4px;
+    cursor: pointer;
+    position: relative;
+    margin-right: 8px;
+}
+
+.custom-checkbox input[type="checkbox"]:checked {
+    background-color: #66b3ff;
+}
+
+.custom-checkbox input[type="checkbox"]:checked::after {
+    content: '✔';
+    position: absolute;
+    top: 1px;
+    left: 4px;
+    color: white;
+    font-size: 14px;
+}
+

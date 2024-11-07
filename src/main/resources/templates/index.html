@@ -1,60 +1,100 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Todo List Application</title>
-    <link rel="stylesheet" href="main.css">
+    <title>Todo List App</title>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="main.css">
 </head>
 <body>
-<header>
+<div class="container">
     <h1>Todo List</h1>
-    <div class="filters">
-        <button id="today-btn">Сегодня</button>
-        <button id="week-btn">Эта неделя</button>
-        <button id="pending-btn">Невыполненные задачи</button>
-    </div>
-    <div class="search">
-        <input type="text" id="search-input" placeholder="Поиск задач">
-        <ul id="search-results"></ul>
-    </div>
-    <div class="date-range">
-        <label for="start-date">С:</label>
-        <input type="text" id="start-date" placeholder="Начальная дата">
-        <label for="end-date">По:</label>
-        <input type="text" id="end-date" placeholder="Конечная дата">
-        <button id="filter-date-btn">Фильтровать</button>
-    </div>
-</header>
 
-<section class="task-list">
-    <table>
-        <thead>
-        <tr>
-            <th>Название</th>
-            <th>Описание</th>
-            <th>Дата</th>
-            <th>Статус</th>
-        </tr>
-        </thead>
-        <tbody id="tasks-tbody">
-        <!-- Динамическое заполнение задач через JavaScript -->
-        </tbody>
-    </table>
-    <div class="pagination">
-        <button id="prev-page">Предыдущая</button>
-        <span id="page-info">Страница 1</span>
-        <button id="next-page">Следующая</button>
+    <div class="search-section">
+        <input type="text" class="search-input" id="searchInput" placeholder="Поиск">
+        <button class="search-button" id="searchButton">🔍</button>
     </div>
-</section>
 
-<!-- Модальное окно для полного описания задачи -->
-<div id="modal" class="modal">
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2 id="modal-title"></h2>
-        <p id="modal-full-desc"></p>
+    <div class="main-content">
+        <div class="calendar-container">
+            <div class="calendar-buttons">
+                <button class="rounded-button today-button">Сегодня</button>
+                <button class="rounded-button week-button">На неделю</button>
+            </div>
+            <div class="calendar-section">
+                <div id="calendar"></div>
+            </div>
+
+            <label class="show-incomplete-label">
+                <input type="checkbox" class="show-incomplete-tasks"> Показать только невыполненные задачи
+            </label>
+        </div>
+
+        <div class="tasks-container">
+            <div class="sort-section">
+                <div class="dropdown">
+                    <button class="sort-button">
+                        <img src="ascending-sort.png" alt="Сортировать" class="sort-icon"> Сортировать
+                    </button>
+                    <div class="dropdown-content">
+                        <div class="sort-option" onclick="sortTasks('date')">
+                            <img src="ascending-sort.png" alt="Сортировать" class="sort-icon"> По дате
+                        </div>
+                        <div class="sort-option" onclick="sortTasks('status')">
+                            <img src="ascending-sort.png" alt="Сортировать" class="sort-icon"> По статусу
+                        </div>
+                        <div class="sort-option" onclick="sortTasks('alphabet')">
+                            <img src="ascending-sort.png" alt="Сортировать" class="sort-icon"> По алфавиту А до Я
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="task-list" id="task-list">
+                <div class="task" onclick="showTaskDetails(1)">
+                    <div class="task-info">
+                        <div class="task-title">Задача 1</div>
+                        <div class="task-desc">Краткое описание задачи 1</div>
+                    </div>
+                    <div class="status-area">
+                        <input type="checkbox" class="status-checkbox" onclick="toggleTaskCompletion(event, 1)">
+                        <span class="creation-date">2024-11-04</span>
+                    </div>
+                </div>
+                <div class="task" onclick="showTaskDetails(2)">
+                    <div class="task-info">
+                        <div class="task-title">Задача 2</div>
+                        <div class="task-desc">Краткое описание задачи 2</div>
+                    </div>
+                    <div class="status-area">
+                        <input type="checkbox" class="status-checkbox" onclick="toggleTaskCompletion(event, 2)">
+                        <span class="creation-date">2024-11-04</span>
+                    </div>
+                </div>
+                <!-- Динамически генерируемые задачи -->
+            </div>
+            <!-- Блок для пагинации -->
+            <div id="pagination" class="pagination-selection"></div>
+        </div>
+        <div id="taskDetailsModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="taskTitle"></h2>
+                    <div class="task-meta">
+                        <span id="taskDate"></span>
+                        <label class="custom-checkbox">
+                            <input type="checkbox" id="taskStatusCheckbox"> Выполнено
+                        </label>
+                    </div>
+                </div>
+                <hr>
+                <div class="modal-description">
+                    <p id="taskDescription"></p>
+                </div>
+                <button class="close-button">Готово</button>
+            </div>
+        </div>
     </div>
 </div>
 
