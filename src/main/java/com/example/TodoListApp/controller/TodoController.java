@@ -11,6 +11,8 @@ import java.util.List;
 
 /**
  * Контроллер для обработки запросов к API для работы с задачами.
+ * Все запросы к API для управления задачами начинаются с префикса "/api/todos".
+ * Контроллер предоставляет функциональность для получения, обновления, поиска задач и других операций.
  */
 @RestController
 @RequestMapping("/api/todos")
@@ -19,6 +21,7 @@ public class TodoController {
 
     /**
      * Конструктор для инъекции зависимости `TodoService`.
+     * С помощью этого сервиса выполняется вся бизнес-логика работы с задачами.
      *
      * @param todoService сервис для обработки логики задач.
      */
@@ -29,6 +32,7 @@ public class TodoController {
 
     /**
      * Получение полного списка задач с пагинацией.
+     * Пагинация осуществляется с использованием параметров `limit` и `offset`.
      *
      * @param limit  максимальное количество задач для возврата.
      * @param offset смещение для пагинации.
@@ -43,6 +47,7 @@ public class TodoController {
 
     /**
      * Получение задач по диапазону дат и статусу.
+     * Параметры `from` и `to` задают диапазон дат, а `status` — статус задачи.
      *
      * @param from   начальная дата диапазона, должна быть в формате ISO.
      * @param to     конечная дата диапазона, должна быть в формате ISO.
@@ -63,9 +68,10 @@ public class TodoController {
 
     /**
      * Поиск задач по ключевому слову в названии.
+     * Ищет задачи, названия которых содержат подстроку, переданную в параметре `q`.
      *
      * @param q строка поиска, подстрока, которую нужно найти в названии задачи.
-     * @param limit  максимальное количество задач для возврата.
+     * @param limit максимальное количество задач для возврата.
      * @param offset смещение для пагинации.
      * @return список задач, названия которых содержат заданную подстроку.
      */
@@ -77,7 +83,12 @@ public class TodoController {
         return todoService.searchTodosByName(q, limit, offset);
     }
 
-    // Получение общего количества задач
+    /**
+     * Получение общего количества задач.
+     * Возвращает общее количество задач в базе данных.
+     *
+     * @return общее количество задач.
+     */
     @GetMapping("/count")
     public long getTotalCount() {
         return todoService.getTotalCount();
@@ -85,6 +96,7 @@ public class TodoController {
 
     /**
      * Поиск задачи по идентификатору.
+     * Возвращает задачу с заданным идентификатором.
      *
      * @param id идентификатор задачи.
      * @return задача с заданным идентификатором.
@@ -94,6 +106,15 @@ public class TodoController {
         return todoService.getEntityById(id);
     }
 
+    /**
+     * Обновление статуса задачи.
+     * Принимает объект {@link StatusUpdate}, который содержит новый статус задачи.
+     *
+     * @param id идентификатор задачи, чей статус нужно обновить.
+     * @param statusUpdate объект, содержащий новый статус задачи.
+     * @return обновленную задачу.
+     * @throws RuntimeException если задача с данным идентификатором не найдена.
+     */
     @PutMapping("/{id}")
     public TodoEntity updateTodoEntityStatus(@PathVariable Long id, @RequestBody StatusUpdate statusUpdate){
         TodoEntity todoEntity = todoService.getEntityById(id);

@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
 
 /**
  * Сервис для обработки бизнес-логики, включая фильтрацию и поиск задач.
+ * Этот сервис взаимодействует с репозиторием `TodoRepository` для выполнения операций с задачами,
+ * таких как поиск, фильтрация, и сохранение данных.
  */
 @Service
 public class TodoService {
@@ -29,23 +31,14 @@ public class TodoService {
         this.todoRepository = todoRepository;
     }
 
-    /**
-     * Получить все задачи с пагинацией.
-     *
-     * @param limit  максимальное количество задач.
-     * @param offset смещение для пагинации.
-     * @return список задач.
-     */
-    public List<TodoEntity> getTodos(int limit, int offset) {
-        return todoRepository.findAll(PageRequest.of(offset / limit, limit)).getContent();
-    }
 
     /**
-     * Фильтрация задач по диапазону дат, статусу и строке поиска с пагинацией.
+     * Получить все задачи с пагинацией.
+     * Этот метод возвращает все задачи, используя параметры пагинации для управления объемом данных.
      *
-     * @param limit  максимальное количество задач.
+     * @param limit  максимальное количество задач для возврата.
      * @param offset смещение для пагинации.
-     * @return список задач, соответствующих критериям.
+     * @return список всех задач с учетом пагинации.
      */
     public List<TodoEntity> getAllTodos(int limit, int offset) {
         Pageable pageable = PageRequest.of(offset / limit, limit);
@@ -54,11 +47,12 @@ public class TodoService {
 
     /**
      * Фильтрация задач по диапазону дат и статусу с пагинацией.
+     * Этот метод позволяет фильтровать задачи по дате и статусу (выполнена или нет), а также поддерживает пагинацию.
      *
-     * @param from   начальная дата.
-     * @param to     конечная дата.
-     * @param status статус задачи.
-     * @param limit  максимальное количество задач.
+     * @param from   начальная дата для фильтрации.
+     * @param to     конечная дата для фильтрации.
+     * @param status статус задачи (выполнена или нет).
+     * @param limit  максимальное количество задач для возврата.
      * @param offset смещение для пагинации.
      * @return список задач, соответствующих критериям.
      */
@@ -73,11 +67,12 @@ public class TodoService {
 
     /**
      * Поиск задач по названию с пагинацией.
+     * Этот метод позволяет искать задачи по части названия, игнорируя регистр, с учетом пагинации.
      *
-     * @param namePart строка поиска, подстрока, которую нужно найти в названии задачи.
-     * @param limit  максимальное количество задач.
+     * @param namePart строка поиска для подстроки в названии задачи.
+     * @param limit  максимальное количество задач для возврата.
      * @param offset смещение для пагинации.
-     * @return список задач, названия которых содержат заданную подстроку (без учета регистра).
+     * @return список задач, название которых содержит указанную подстроку.
      */
     public List<TodoEntity> searchTodosByName(String namePart, int limit, int offset) {
         return todoRepository.findByNameContainingIgnoreCase(namePart, PageRequest.of(offset / limit, limit));
@@ -86,6 +81,8 @@ public class TodoService {
 
     /**
      * Получение общего количества задач.
+     * Этот метод возвращает общее количество задач в базе данных, что полезно для вычисления
+     * количества страниц при пагинации.
      *
      * @return общее количество задач.
      */
@@ -93,10 +90,24 @@ public class TodoService {
         return todoRepository.count();
     }
 
+    /**
+     * Получение задачи по идентификатору.
+     * Этот метод ищет задачу по её идентификатору и выбрасывает исключение, если задача не найдена.
+     *
+     * @param id идентификатор задачи.
+     * @return задача с заданным идентификатором.
+     */
     public TodoEntity getEntityById(Long id) {return todoRepository.findById(id).orElseThrow(() ->
             new RuntimeException("Задача не найдена"));
     }
 
+    /**
+     * Сохранение или обновление задачи.
+     * Этот метод сохраняет задачу в базе данных, используя репозиторий для выполнения операции.
+     *
+     * @param todoEntity объект задачи для сохранения.
+     * @return сохраненная задача.
+     */
     public TodoEntity save(TodoEntity todoEntity){
         return todoRepository.save(todoEntity);
     }
