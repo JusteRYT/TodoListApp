@@ -4,10 +4,7 @@ import com.example.TodoListApp.entity.TodoEntity;
 import com.example.TodoListApp.service.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,42 +27,82 @@ public class TodoController {
         this.todoService = todoService;
     }
 
-
+    /**
+     * Получение полного списка задач с пагинацией.
+     *
+     * @param limit  максимальное количество задач для возврата.
+     * @param offset смещение для пагинации.
+     * @return список задач.
+     */
     @GetMapping
-    public List<TodoEntity> getAllTodos() {
-        return todoService.getAllTodos();
+    public List<TodoEntity> getTodos(
+            @RequestParam(defaultValue = "10") int limit,
+            @RequestParam(defaultValue = "0") int offset) {
+        return todoService.getAllTodos(limit, offset);
     }
 
     /**
      * Получение задач по диапазону дат и статусу.
-     * <p>
-     * Эндпоинт `/api/todos/date` возвращает список задач, которые попадают в указанный временной
-     * диапазон и соответствуют статусу выполнения.
      *
-     * @param from начальная дата диапазона, должна быть в формате ISO.
-     * @param to конечная дата диапазона, должна быть в формате ISO.
+     * @param from   начальная дата диапазона, должна быть в формате ISO.
+     * @param to     конечная дата диапазона, должна быть в формате ISO.
      * @param status статус задачи (`true` — выполнена, `false` — не выполнена).
+     * @param limit  максимальное количество задач для возврата.
+     * @param offset смещение для пагинации.
      * @return список задач, соответствующих заданным критериям.
      */
     @GetMapping("/date")
     public List<TodoEntity> getTodosByDateAndStatus(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to,
-            @RequestParam Boolean status) {
-        return todoService.getTodosByDateAndStatus(from, to, status);
+            @RequestParam(required = false) Boolean status,
+            @RequestParam(defaultValue = "10") int limit,
+            @RequestParam(defaultValue = "0") int offset) {
+        return todoService.getTodosByDateAndStatus(from, to, status, limit, offset);
     }
 
     /**
      * Поиск задач по ключевому слову в названии.
-     * <p>
-     * Эндпоинт `/api/todos/find` позволяет искать задачи, название которых содержит
-     * указанное ключевое слово.
      *
      * @param q строка поиска, подстрока, которую нужно найти в названии задачи.
+     * @param limit  максимальное количество задач для возврата.
+     * @param offset смещение для пагинации.
      * @return список задач, названия которых содержат заданную подстроку.
      */
     @GetMapping("/find")
-    public List<TodoEntity> searchTodosByName(@RequestParam String q){
-        return todoService.searchTodosByName(q);
+    public List<TodoEntity> searchTodosByName(
+            @RequestParam String q,
+            @RequestParam(defaultValue = "10") int limit,
+            @RequestParam(defaultValue = "0") int offset) {
+        return todoService.searchTodosByName(q, limit, offset);
+    }
+
+    // Получение общего количества задач
+    @GetMapping("/count")
+    public long getTotalCount() {
+        return todoService.getTotalCount();
+    }
+
+    /**
+     * Поиск задачи по идентификатору.
+     *
+     * @param id идентификатор задачи.
+     * @return задача с заданным идентификатором.
+     */
+    @GetMapping("/{id}")
+    public TodoEntity getTodoById(@PathVariable Long id){
+        return todoService.getEntityById(id);
+    }
+
+    @PutMapping("/{id}")
+    public TodoEntity updateTodoEntityStatus(@PathVariable Long id, @RequestBody StatusUpdate statusUpdate){
+        TodoEntity todoEntity = todoService.getEntityById(id);
+        System.out.println(statusUpdate);
+        if(todoEntity == null){
+            throw new RuntimeException("Задача не найдена");
+        }
+        todoEntity.setStatus(statusUpdate.isStatus());
+
+        return todoService.save(todoEntity);
     }
 }
