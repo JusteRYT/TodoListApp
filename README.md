@@ -73,7 +73,7 @@ GET /api/todos
 #### Поиск задач по названию:
 
 ```http
-GET /api/todos/search?namePart=task
+GET /api/todos/find?q=Test
 ```
 
 - Ответ: Список задач, название которых содержит "task".
@@ -81,7 +81,7 @@ GET /api/todos/search?namePart=task
 #### Фильтрация задач по дате и статусу:
 
 ```http
-GET /api/todos/filter?from=2024-11-01T00:00:00&to=2024-11-07T23:59:59&status=true
+GET /api/todos/date?from=2024-11-01T00:00:00&to=2024-11-07T23:59:59&status=true
 ```
 
 - Ответ: Список задач, которые находятся в указанном диапазоне дат и имеют статус "выполнено".
@@ -93,7 +93,7 @@ GET /api/todos/filter?from=2024-11-01T00:00:00&to=2024-11-07T23:59:59&status=tru
 - Пример запроса с пагинацией для получения задач:
 
 ```
-GET /api/todos?page=1&size=10
+GET /api/todos?offset=11&limit=1
 ```
 
 - Ответ: 10 задач, начиная с 11-й.
